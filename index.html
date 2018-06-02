@@ -105,6 +105,7 @@
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
 <script>
     new Vue({
         el: '#app',
@@ -129,13 +130,26 @@
                         let year = params[0];
                         let month = params[1];
 
+                        // Adequação da busca para o mês de Janeiro
+                        if(month === "01") {
+                            month = "12";
+                            --year;
+                        }
+
                         const response = await axios.get(`${this.corsbypass}http://www.portaltransparencia.gov.br/despesasdiarias/resultado?consulta=rapida&periodoInicio=01%2F${month}%2F${year}&periodoFim=31%2F${month}%2F${year}&fase=PAG&codigoOS=TOD&codigoFavorecido=${this.cpf}`);
                         let test = response.data.search("Nenhum documento obedece aos critérios da consulta.");
 
-                        this.loading = false;
-
                         if(test === -1) {
-                            this.message = "O pagamento da bolsa foi realizado.";
+                            let page = $($.parseHTML(response.data));
+                            let rowFilter = ".impar";
+
+                            // Adequação da busca para o mês de Janeiro
+                            if(params[1] !== month) rowFilter = ".par";
+
+                            let row = page.find("tr").filter(rowFilter);
+                            let paymentDueDate = row.find("td")[0].innerHTML;
+
+                            this.message = `O pagamento da bolsa foi realizado em ${paymentDueDate}.`;
                             this.alert = "success";
                         }
                         else {
@@ -144,10 +158,11 @@
                         }
                     }
                     else {
-                        this.loading = false;
                         this.message = "O CPF informado não é válido.";
                         this.alert = "error";
                     }
+
+                    this.loading = false;
                 }
                 else {
                     this.message = "Os campos precisam ser válidos!";
@@ -161,6 +176,12 @@
         }
     });
 
+    /**
+     * Função de validação de número de CPF
+     * Adapdata da função disponível em http://www.receita.fazenda.gov.br/aplicacoes/atcta/cpf/funcoes.js
+     * @param {String} cpf Número de CPF sem pontos nem traço
+     * @return {boolean} Verdadeiro se o CPF for válido e False caso contrário
+     */
     function isCPFValid(cpf) {
         let soma;
         let resto;
