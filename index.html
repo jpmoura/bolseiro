@@ -7,6 +7,11 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
 </head>
@@ -78,28 +83,28 @@
                 </v-layout>
                 <v-layout row wrap align-center>
                     <v-flex xs12>
-                        <v-footer height="auto" fixed>
-                            <v-card flat tile class="flex primary white--text text-xs-center">
-                                <v-card-text>
-                                    <v-btn icon class="mx-3 white--text" href="https://br.linkedin.com/in/mourajp/en"
-                                           target="_blank">
-                                        <v-icon size="24px">fab fa-linkedin</v-icon>
-                                    </v-btn>
-                                    <v-btn icon class="mx-3 white--text" href="https://github.com/jpmoura/bolseiro"
-                                           target="_blank">
-                                        <v-icon size="24px">fab fa-github</v-icon>
-                                    </v-btn>
-                                </v-card-text>
-                                <v-card-text class="white--text">
-                                    <v-icon size="14px" class="white--text">fab fa-creative-commons</v-icon> 2018 —
-                                    <strong>João Pedro Santos de Moura</strong>
-                                </v-card-text>
-                                <v-spacer></v-spacer>
-                            </v-card>
-                        </v-footer>
+
                     </v-flex>
                 </v-layout>
             </v-container>
+            <v-footer height="auto" class="primary" fixed>
+                <v-layout row wrap justify-center>
+                    <v-btn icon class="mx-3 white--text" href="https://br.linkedin.com/in/mourajp/en"
+                           target="_blank">
+                        <v-icon size="24px">fab fa-linkedin</v-icon>
+                    </v-btn>
+                    <v-btn icon class="mx-3 white--text" href="https://github.com/jpmoura/bolseiro"
+                           target="_blank">
+                        <v-icon size="24px">fab fa-github</v-icon>
+                    </v-btn>
+                    <v-flex xs12 py-3 text-xs-center white--text>
+                        <v-icon size="14px" class="white--text">fab fa-creative-commons</v-icon> {{ year }} Bolseiro —
+                        <a class="white--text" href="https://github.com/jpmoura" target="_blank">
+                            João Pedro Santos de Moura
+                        </a>
+                    </v-flex>
+                </v-layout>
+            </v-footer>
         </v-content>
     </v-app>
 </div>
@@ -118,6 +123,7 @@
             loading: false,
             alert: null,
             valid: false,
+            year: (new Date()).getFullYear(),
             corsbypass: "https://cors-anywhere.herokuapp.com/"
         },
         methods: {
