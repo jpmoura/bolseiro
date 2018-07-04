@@ -25,7 +25,7 @@ com o CPF informado, ou seja, que a bolsa não foi pag. Contudo, a bolsa pode es
 informados. A partir disso a página é varrida em busca da data do dia do pagamento e é adicionada a informação que será
 exibida ao usuário.
 
-## Difulcades encontradas
+## Dificuldades encontradas
 
 A principal dificuldade foi a não existência de uma API para a transparência de dados na esfera federal. Durante o
 desenvolvimento foi encontradas APIs na esfera estadual porém a no âmbito federal não existe nenhuma.
@@ -35,7 +35,8 @@ Além disso, foi preciso contornar o problema de
 se consiga os dados diretamente a partir de requisições AJAX. Para solucionar essa limitação foi usado o 
 [CORS Anywhere](https://github.com/Rob--W/cors-anywhere/).
 
-Outra dificuldade foi adaptar a consulta especificamente para o mês de Janeiro, que 
+Outra dificuldade foi adaptar a consulta especificamente para o mês de Janeiro, que normalmente é paga em Dezembro, ou
+seja um mês antes.
 
 ## Dependências
 
