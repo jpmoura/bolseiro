@@ -77,7 +77,8 @@
                 <v-layout v-if="!loading && alert" row wrap align-center>
                     <v-flex xs12 class="text-xs-center">
                         <v-alert v-model="alert" :type="alert" dismissible>
-                            {{ message }}
+                            <p>Erro inesperado: {{ message }}</p>
+                            <p>Por favor, reporte este erro clicando <a href="https://github.com/jpmoura/bolseiro/issues" target="_blank">neste link</a>.</p>
                         </v-alert>
                     </v-flex>
                 </v-layout>
@@ -144,24 +145,31 @@
 
                         let lastDayOfMonth = new Date(year, parseInt(month), 0).getDate();
 
-                        const response = await axios.get(`${this.corsbypass}http://www.portaltransparencia.gov.br/despesasdiarias/resultado?consulta=rapida&periodoInicio=01%2F${month}%2F${year}&periodoFim=${lastDayOfMonth}%2F${month}%2F${year}&fase=PAG&codigoOS=TOD&codigoFavorecido=${this.cpf}`);
-                        let test = response.data.search("Nenhum documento obedece aos critérios da consulta.");
+                        try {
+                            const response = await axios.get(
+                                `${this.corsbypass}http://www.portaltransparencia.gov.br/despesasdiarias/resultado?consulta=rapida&periodoInicio=01%2F${month}%2F${year}&periodoFim=${lastDayOfMonth}%2F${month}%2F${year}&fase=PAG&codigoOS=TOD&codigoFavorecido=${this.cpf}`);
+                            let test = response.data.search("Nenhum documento obedece aos critérios da consulta.");
 
-                        if(test === -1) {
-                            let page = $($.parseHTML(response.data));
-                            let rowFilter = ".impar";
+                            if(test === -1) {
+                                let page = $($.parseHTML(response.data));
+                                let rowFilter = ".impar";
 
-                            // Adequação da busca para o mês de Janeiro
-                            if(params[1] !== month) rowFilter = ".par";
+                                // Adequação da busca para o mês de Janeiro
+                                if(params[1] !== month) rowFilter = ".par";
 
-                            let row = page.find("tr").filter(rowFilter);
-                            let paymentDueDate = row.find("td")[0].innerHTML;
+                                let row = page.find("tr").filter(rowFilter);
+                                let paymentDueDate = row.find("td")[0].innerHTML;
 
-                            this.message = `O pagamento da bolsa foi realizado em ${paymentDueDate}.`;
-                            this.alert = "success";
+                                this.message = `O pagamento da bolsa foi realizado em ${paymentDueDate}.`;
+                                this.alert = "success";
+                            }
+                            else {
+                                this.message = "Nenhuma informação foi encontrada com o CPF informado.";
+                                this.alert = "error";
+                            }
                         }
-                        else {
-                            this.message = "Nenhuma informação foi encontrada com o CPF informado.";
+                        catch (e) {
+                            this.message = e.message;
                             this.alert = "error";
                         }
                     }
