@@ -151,7 +151,12 @@
 
     // Persist the app state in the browser
     const vuexLocal = new window.VuexPersistence.VuexPersistence({
+        key: 'bolseiro',
         storage: window.localStorage,
+        reducer: state => ({
+            cpf: state.cpf,
+            date: state.date,
+        })
     })
 
     // Creates the Vuex store

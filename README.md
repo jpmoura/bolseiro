@@ -45,6 +45,10 @@ da API, uma vez que ela mostrou ter uma velocidade de execução maior e
 uma menor taxa de erros se comparada com o *endpoint* oferecido pela
 API.
 
+Outra dificuldade é depender do
+[CORS-Anywhere](https://cors-anywhere.herokuapp.com/) para executar a
+query no servidor, uma vez que esse serviço por vezes fica indisponível.
+
 ## Dependências
 
 Essa aplicação se apoia nas seguintes tecnologias:
