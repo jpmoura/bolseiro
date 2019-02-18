@@ -1,105 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-    <meta charset="UTF-8">
     <title>Bolseiro - Sua bolsa já caiu?</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
-    <style>
-        a {
-            text-decoration: none;
-        }
-    </style>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <style>a { text-decoration: none; }</style>
 </head>
 <body>
 <div id="app">
     <v-app>
         <v-content>
+
             <v-toolbar color="primary" class="white--text">
-                <v-icon class="white--text">local_mall</v-icon>
+                <v-icon class="white--text">fas fa-piggy-bank</v-icon>
                 <v-toolbar-title>Bolseiro</v-toolbar-title>
             </v-toolbar>
+
             <v-container>
-                <v-form ref="form" v-model="valid" lazy-validation>
-                    <v-layout row wrap align-center>
-                        <v-flex xs12>
-                            <v-menu ref="menu"
-                                    :close-on-content-click="false"
-                                    v-model="menu"
-                                    :nudge-right="40"
-                                    :return-value.sync="date"
-                                    lazy
-                                    transition="scale-transition"
-                                    offset-y
-                                    full-width
-                                    max-width="290px"
-                                    min-width="290px">
-                                <v-text-field slot="activator" v-model="date" label="Mês e ano que deseja consultar"
-                                              prepend-icon="event" readonly required
-                                              :rules="[v => !!v || 'É necessário informar um ano e um mês']">
-                                </v-text-field>
-                                <v-date-picker v-model="date" type="month"  no-title scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
-                                    <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-                                </v-date-picker>
-                            </v-menu>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap align-center>
-                        <v-flex xs12>
-                            <v-text-field id="cpf" name="cpf-input" label="CPF do bolsista" v-model="cpf" :mask="cpfMask"
-                                          prepend-icon="school" required
-                                          :rules="[v => !!v || 'É necessário informar um CPF']">
+                <v-layout row wrap align-center>
+                    <v-flex xs12>
+                        <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :nudge-right="40" lazy
+                                :return-value.sync="date" transition="scale-transition" offset-y full-width
+                                max-width="290px" min-width="290px">
+                            <v-text-field slot="activator" v-model="date" label="Mês e ano que deseja consultar"
+                                          prepend-icon="event" :error="$v.date.$error" @blur="$v.date.$touch()"
+                                          required  :success="!$v.date.$error" @input="$v.date.$touch()"
+                                          :error-messages="$v.date.dirty && !$v.date.required ? ['Informe um mês e ano'] : []">
                             </v-text-field>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap align-center>
-                        <v-flex xs12 class="text-xs-center">
-                            <v-btn v-if="!loading" @click="clear">
-                                <v-icon left>backspace</v-icon>Limpar
-                            </v-btn>
-                            <v-btn color="primary" v-if="!loading" :disabled="!valid" @click="checkScholarship">
-                                <v-icon left>search</v-icon>Pesquisar
-                            </v-btn>
-                        </v-flex>
-                    </v-layout>
-                </v-form>
-                <v-layout v-if="loading" row wrap align-center>
-                    <v-flex xs12 class="text-xs-center">
-                        <v-progress-circular :size="70" :width="7" indeterminate color="primary"></v-progress-circular>
-                    </v-flex>
-                </v-layout>
-                <v-layout v-if="!loading && alert" row wrap align-center>
-                    <v-flex xs12 class="text-xs-center">
-                        <v-alert v-model="alert" :type="alert" dismissible>
-                            <p>Erro inesperado: {{ message }}</p>
-                            <p>Por favor, reporte este erro clicando <a href="https://github.com/jpmoura/bolseiro/issues" target="_blank">neste link</a>.</p>
-                        </v-alert>
+                            <v-date-picker v-model="date" type="month" no-title scrollable>
+                                <v-spacer></v-spacer>
+                                <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                                <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                            </v-date-picker>
+                        </v-menu>
                     </v-flex>
                 </v-layout>
                 <v-layout row wrap align-center>
                     <v-flex xs12>
+                        <v-text-field id="cpf" name="cpf-input" label="CPF do bolsista" v-model="cpf"
+                                      :mask="cpfMask" prepend-icon="school" required @blur="$v.cpf.$touch()"
+                                      @input="$v.cpf.$touch()" :error="$v.cpf.$error" :success="!$v.cpf.$error"
+                                      :error-messages="$v.cpf.$dirty && !$v.cpf.required ? ['É necessário informar CPF'] : !$v.cpf.isCPFValid ? ['O CPF precisa ser válido'] : []">
+                        </v-text-field>
+                    </v-flex>
+                </v-layout>
 
+                <v-layout v-if="!loading" row wrap >
+                    <v-flex xs12 class="text-xs-center">
+                        <v-btn @click="clear">
+                            <v-icon left>backspace</v-icon>Limpar
+                        </v-btn>
+                        <v-btn color="primary" :disabled="$v.date.$error || $v.cpf.$error"
+                               @click="checkScholarship">
+                            <v-icon left>search</v-icon>
+                            Pesquisar
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+
+                <v-layout v-if="loading" row wrap>
+                    <v-flex xs12 class="text-xs-center">
+                        <v-progress-circular :size="70" :width="7" indeterminate color="primary"></v-progress-circular>
+                    </v-flex>
+                </v-layout>
+
+                <v-layout v-if="!loading && alert" row wrap>
+                    <v-flex>
+                        <v-card :color="alert" class="white--text">
+                            <v-card-title primary-title>
+                                <span class="headline">
+                                    <v-icon color="white" mr-6>
+                                        {{ alert === 'success' ? 'fas fa-hand-holding-usd' : alert === 'error' ? 'fab fa-creative-commons-nc' : 'fas fa-bug' }}
+                                    </v-icon>
+                                    <span v-if="alert !== 'warning'">
+                                        Sua bolsa {{ alert === 'error' ? 'não' : '' }} foi paga
+                                    </span>
+                                    <span v-else>
+                                        Opa, algo deu errado
+                                    </span>
+                                </span>
+                            </v-card-title>
+                            <v-card-text>
+                                <p v-if="alert != 'warning'">{{ message }}.</p>
+                                <div v-else>
+                                    <p>Erro: {{ message }}</p>
+                                    <p>
+                                        Você pode reportar esse erro no
+                                        <a href="https://github.com/jpmoura/bolseiro/issues" target="_blank"
+                                           class="text--white" >GitHub
+                                        </a>.
+                                    </p>
+                                </div>
+                            </v-card-text>
+                            <v-card-actions v-if="alert === 'success'">
+                                <v-btn flat dark target="_blank"
+                                       :href='`http://www.portaltransparencia.gov.br/despesas/pagamento/${this.paymentDocument}`'>
+                                    Mais detalhes
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
                     </v-flex>
                 </v-layout>
             </v-container>
+
             <v-footer height="auto" class="primary" fixed>
                 <v-layout row wrap justify-center>
-                    <v-btn icon class="mx-3 white--text" href="https://br.linkedin.com/in/mourajp/en"
-                           target="_blank">
+                    <v-btn icon class="mx-3 white--text" href="https://www.linkedin.com/in/mourajp/" target="_blank">
                         <v-icon size="24px">fab fa-linkedin</v-icon>
                     </v-btn>
-                    <v-btn icon class="mx-3 white--text" href="https://github.com/jpmoura/bolseiro"
-                           target="_blank">
+                    <v-btn icon class="mx-3 white--text" href="https://github.com/jpmoura/bolseiro" target="_blank">
                         <v-icon size="24px">fab fa-github</v-icon>
                     </v-btn>
                     <v-flex xs12 py-3 text-xs-center white--text>
-                        <v-icon size="14px" class="white--text">fab fa-creative-commons</v-icon> {{ year }} Bolseiro —
+                        <v-icon size="14px" class="white--text">fab fa-creative-commons</v-icon>
+                        {{ (new Date()).getFullYear() }} Bolseiro —
                         <a class="white--text" href="https://github.com/jpmoura" target="_blank">
                             João Pedro Santos de Moura
                         </a>
@@ -110,87 +132,34 @@
     </v-app>
 </div>
 
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuex-persist"></script>
+<script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+<script src="https://unpkg.com/vuelidate/dist/vuelidate.min.js"></script>
+<script src="https://unpkg.com/vuelidate/dist/validators.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
-<script>
-    new Vue({
-        el: '#app',
-        data: {
-            message: null,
-            cpf: null,
-            date: null,
-            menu: false,
-            cpfMask: "###.###.###-##",
-            loading: false,
-            alert: null,
-            valid: false,
-            year: (new Date()).getFullYear(),
-            corsbypass: "https://cors-anywhere.herokuapp.com/"
-        },
-        methods: {
-            checkScholarship: async function() {
-                if(this.$refs.form.validate()) {
-                    this.loading = true;
+<script type="module">
+    import state from './store/state.js'
+    import mutations from './store/mutations.js'
 
-                    if(isCPFValid(this.cpf)) {
-                        let params = this.date.split("-");
-                        let year = params[0];
-                        let month = params[1];
+    const { required } = window.validators
 
-                        // Adequação da busca para o mês de Janeiro
-                        if(month === "01") {
-                            month = "12";
-                            --year;
-                        }
+    Vue.use(Vuex)
+    Vue.use(window.vuelidate.default)
 
-                        let lastDayOfMonth = new Date(year, parseInt(month), 0).getDate();
+    // Persist the app state in the browser
+    const vuexLocal = new window.VuexPersistence.VuexPersistence({
+        storage: window.localStorage,
+    })
 
-                        try {
-                            const response = await axios.get(
-                                `${this.corsbypass}http://www.portaltransparencia.gov.br/despesasdiarias/resultado?consulta=rapida&periodoInicio=01%2F${month}%2F${year}&periodoFim=${lastDayOfMonth}%2F${month}%2F${year}&fase=PAG&codigoOS=TOD&codigoFavorecido=${this.cpf}`);
-                            let test = response.data.search("Nenhum documento obedece aos critérios da consulta.");
-
-                            if(test === -1) {
-                                let page = $($.parseHTML(response.data));
-                                let rowFilter = ".impar";
-
-                                // Adequação da busca para o mês de Janeiro
-                                if(params[1] !== month) rowFilter = ".par";
-
-                                let row = page.find("tr").filter(rowFilter);
-                                let paymentDueDate = row.find("td")[0].innerHTML;
-
-                                this.message = `O pagamento da bolsa foi realizado em ${paymentDueDate}.`;
-                                this.alert = "success";
-                            }
-                            else {
-                                this.message = "Nenhuma informação foi encontrada com o CPF informado.";
-                                this.alert = "error";
-                            }
-                        }
-                        catch (e) {
-                            this.message = e.message;
-                            this.alert = "error";
-                        }
-                    }
-                    else {
-                        this.message = "O CPF informado não é válido.";
-                        this.alert = "error";
-                    }
-
-                    this.loading = false;
-                }
-                else {
-                    this.message = "Os campos precisam ser válidos!";
-                    this.alert = "error";
-                }
-            },
-            clear: function() {
-                this.$refs.form.reset();
-                this.valid = false;
-            }
-        }
-    });
+    // Creates the Vuex store
+    const store = new Vuex.Store({
+        state: state,
+        mutations,
+        plugins: [vuexLocal.plugin]
+    })
 
     /**
      * Função de validação de número de CPF
@@ -204,7 +173,7 @@
 
         soma = 0;
 
-        if (cpf === "00000000000") return false;
+        if (cpf === "00000000000" || cpf === null || cpf === "") return false;
         for (let i = 1; i <= 9; i++) soma = soma + parseInt(cpf.substring(i-1, i)) * (11 - i);
 
         resto = (soma * 10) % 11;
@@ -223,6 +192,95 @@
 
         return true;
     }
+
+    new Vue({
+        el: '#app',
+        store,
+        computed: {
+            alert: {
+                get () { return this.$store.state.alert },
+                set (val) { this.$store.commit('setAlert', val) }
+            },
+            cpf: {
+                get () { return this.$store.state.cpf },
+                set (val) { this.$store.commit('setCpf', val) }
+            },
+            date: {
+                get () { return this.$store.state.date },
+                set (val) { this.$store.commit('setDate', val) }
+            },
+            loading: {
+                get () { return this.$store.state.loading },
+                set (val) { this.$store.commit('setLoading', val) }
+            },
+            menu: {
+                get () { return this.$store.state.menu },
+                set (val) { this.$store.commit('setMenu', val) }
+            },
+            message: {
+                get () { return this.$store.state.message },
+                set (val) { this.$store.commit('setMessage', val) }
+            },
+            paymentDocument: {
+                get () { return this.$store.state.paymentDocument },
+                set (val) { this.$store.commit('setPaymentDocument', val) }
+            },
+            ...Vuex.mapState(['corsByPass', 'cpfMask']),
+        },
+        methods: {
+            checkScholarship: async function() {
+                this.$v.date.$touch()
+                this.$v.cpf.$touch()
+
+                if(this.$v.date.$invalid || this.$v.cpf.$invalid) return
+
+                this.loading = true;
+
+                let params = this.date.split("-");
+                let year = params[0];
+                let month = params[1];
+                let lastDayOfMonth = new Date(year, parseInt(month), 0).getDate();
+
+                try {
+                    const response = await axios.get(`${this.corsByPass}http://www.portaltransparencia.gov.br/despesas/favorecido/resultado?paginacaoSimples=true&tamanhoPagina=15&offset=0&direcaoOrdenacao=desc&colunaOrdenacao=valor&colunasSelecionadas=data%2CdocumentoResumido%2ClocalizadorGasto%2Cfase%2Cespecie%2Cfavorecido%2CufFavorecido%2Cvalor%2Cug%2Cuo%2Corgao%2CorgaoSuperior%2Cgrupo%2Celemento%2Cmodalidade&de=01%2F${month}%2F${year}&ate=${lastDayOfMonth}%2F${month}%2F${year}&cpfCnpj=${this.cpf}&faseDespesa=3`);
+
+                    if(response.data.recordsTotal > 0)
+                    {
+                        let record = response.data.data[0];
+                        this.paymentDocument = record.documento
+                        this.message = `O pagamento da bolsa foi realizado em ${record.data}`
+                        this.alert = "success"
+                    }
+                    else
+                    {
+                        this.message = "Nenhuma informação foi encontrada com o CPF informado";
+                        this.alert = "error";
+                    }
+                }
+                catch (e)
+                {
+                    console.log(e);
+                    this.message = e.message;
+                    this.alert = "warning";
+                }
+                finally
+                {
+                    this.loading = false
+                }
+            },
+            clear: function() {
+                this.$store.commit('setCpf', null)
+                this.$store.commit('setDate', null)
+                this.$store.commit('setAlert', null)
+                this.$v.cpf.$reset()
+                this.$v.date.$reset()
+            }
+        },
+        validations: {
+            cpf: { required, isCPFValid },
+            date: { required }
+        }
+    });
 </script>
 </body>
 </html>
