@@ -1,4 +1,8 @@
 # Bolseiro
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jpmoura_bolseiro&metric=alert_status)](https://sonarcloud.io/dashboard?id=jpmoura_bolseiro)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jpmoura_bolseiro&metric=bugs)](https://sonarcloud.io/dashboard?id=jpmoura_bolseiro)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=jpmoura_bolseiro&metric=code_smells)](https://sonarcloud.io/dashboard?id=jpmoura_bolseiro)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jpmoura_bolseiro&metric=coverage)](https://sonarcloud.io/dashboard?id=jpmoura_bolseiro)
 
 Bolseiro é uma Single Page Application que possibilita um bolsista de
 uma agência federal verificar se sua bolsa de um determinado mês e ano
@@ -13,8 +17,8 @@ A aplicação está disponível
 
 A aplicação verifica no
 [Portal da Transparência](http://www.portaltransparencia.gov.br) a
-situação da ordem bancária referente ao CPF do bolsista pelos dados
-informados.
+situação da ordem bancária referente ao CPF do bolsista informado
+pelo formulário da aplicação.
 
 A consulta é automatizada e só varia de acordo com os parâmetros do
 usuário. Devido a alteração de como o site do
@@ -32,30 +36,21 @@ variam de acordo com os dados do usuário.
 
 ## Dificuldades encontradas
 
-A principal dificuldade encontrada foi o tempo de resposta da API. Em
-vários testes o tempo chegou próximo dos dois minutos, quando não foi
-retornado com uma mensagem de erro que não explica qual o erro.
-
-Devido como a página de consulta foi construída, não é possível fazer
-uma raspagem de dados como era feita na versão inicial da aplicação.
-
-Visando diminuir o tempo de resposta, foi utilizada a mesma URL que é
-requisitada pelo Portal da Transparência em sua página de busca ao invés
-da API, uma vez que ela mostrou ter uma velocidade de execução maior e
-uma menor taxa de erros se comparada com o *endpoint* oferecido pela
-API.
-
-Outra dificuldade é depender do
+A maior dificuldade é depender do
 [CORS-Anywhere](https://cors-anywhere.herokuapp.com/) para executar a
-query no servidor, uma vez que esse serviço por vezes fica indisponível.
+*query* no servidor, uma vez que esse serviço por vezes fica indisponível.
+
+A utilização do [CORS-Anywhere](https://cors-anywhere.herokuapp.com/) é
+necessária devido às restrições de segurança impostas pelo
+[Chrome](https://www.google.com/chrome/)
 
 ## Dependências
 
 Essa aplicação se apoia nas seguintes tecnologias:
 
-* [VueJS](https://vuejs.org) como *framework* de criação de SPA;
-* [VuetifyJS](https://vuetifyjs.com/en/) como *framework* de UI com
-componentes baseados no Material Design;
+* [React](https://reactjs.org/) como *framework* de criação de SPA;
+* [TypeScript](https://www.typescriptlang.org/) como linguagem no lugar
+  do JavaScript;
 * [Axios](https://github.com/axios/axios) para execução de requisições
 AJAX;
 * [Font Awesome](https://fontawesome.com) para utilização de ícones;
@@ -63,6 +58,13 @@ AJAX;
 o problema de referência cruzada;
 
 ## Changelog
+
+### v3.0
+Refatoração completa da aplicação para React com TypeScript, deixando de
+utilizar CDN para importação de bibliotecas. A motivação para esse
+refatoramento foram as constantes quebras da aplicação devido as atualizações
+das bibliotecas de terceiros que sempre eram referenciadas pela versão mais
+recente ao utilizar CDN.
 
 ### v2.0
 
@@ -80,16 +82,6 @@ Versão inical da aplicação, baseada na raspagem de dados da página de
 consultas e utilizando de *bypass* de CORS.
 
 ## TODO
-
-* ~~Melhorar validação do pagamento da bolsa (raspagem);~~
-* ~~Utilizar Vuelidate para validação de dados do formulário;~~
-* ~~Utilizar Vuex para centralizar o estado da aplicação;~~
-* ~~Utilizar vuex-persist para persistir dados como CPF do usuário para
-facilitar o uso em próximas visitas;~~
-* Melhorar a experiência do usuário;
-* Evitar repetições de classes como ```white--text``` dentro de
-elementos aninhados;
-* Considerar outras etapas de status do pagamento como ```Empenho``` e
-```Liquidação```;
-* Consertar erro de ```minimal-ui``` que acontece no Safari;
-* Testar com outras agências financiadoras.
+* Testes de componentes;
+* Testes e2e;
+* Estilos diferentes de *cards* para as etapas do documento bancário (empenho, liquidação e pagamento)
