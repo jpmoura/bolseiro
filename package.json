@@ -13,6 +13,7 @@
   ],
   "version": "3.0.0",
   "private": true,
+  "homepage": "https://jpmoura.github.io/bolseiro",
   "dependencies": {
     "@date-io/moment": "1.x",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -54,6 +55,7 @@
     "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-react": "7.20.3",
     "eslint-plugin-react-hooks": "4.0.8",
+    "gh-pages": "^3.1.0",
     "husky": "^4.3.6",
     "sonarqube-scanner": "^2.8.0",
     "typescript": "^4.0.3"
@@ -63,7 +65,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "sonar": "node sonar-project.js"
+    "sonar": "node sonar-project.js",
+    "predeploy": "yarn build",
+    "deploy": "node gh-pages.js"
   },
   "husky": {
     "hooks": {
