@@ -31,13 +31,13 @@ se mostra consistente quando se trata de disponibilidade, uma vez que
 é raro conseguir uma resposta com os dados, já que na maior parte do
 tempo essa API retorna erro de consulta. Para isso, é feita a mesma
 *query* que seria feita se o usuário estivesse acessando pela página
-de busca, a mesma URL é ultilizada, porém, os parâmetros da consulta
+de busca, a mesma URL é utilizada, porém, os parâmetros da consulta
 variam de acordo com os dados do usuário.
 
 ## Dificuldades encontradas
 
 A maior dificuldade é depender do
-[CORS-Anywhere](https://cors-anywhere.herokuapp.com/) para executar a
+[allOrigins](https://allorigins.win/) para executar a
 *query* no servidor, uma vez que esse serviço por vezes fica indisponível.
 
 A utilização do [CORS-Anywhere](https://cors-anywhere.herokuapp.com/) é
@@ -54,7 +54,7 @@ Essa aplicação se apoia nas seguintes tecnologias:
 * [Axios](https://github.com/axios/axios) para execução de requisições
 AJAX;
 * [Font Awesome](https://fontawesome.com) para utilização de ícones;
-* [CORS-Anywhere](https://cors-anywhere.herokuapp.com/) para solucionar
+* [allOrigins](https://allorigins.win/) para solucionar
 o problema de referência cruzada;
 
 ## Changelog
@@ -78,7 +78,7 @@ Versão com tratamentos de exceções de erros das requisições AJAX.
 
 ### v1.0
 
-Versão inical da aplicação, baseada na raspagem de dados da página de
+Versão inicial da aplicação, baseada na raspagem de dados da página de
 consultas e utilizando de *bypass* de CORS.
 
 ## TODO
