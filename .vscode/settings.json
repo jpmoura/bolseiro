@@ -1,12 +1,16 @@
 {
   "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
+    "source.fixAll.eslint": true
   },
   "eslint.validate": [
-      "javascript",
-      "typescript",
-      "typescriptreact"
+    "javascript",
+    "typescript",
+    "typescriptreact"
   ],
   "eslint.alwaysShowStatus": true,
   "eslint.packageManager": "yarn",
+  "cSpell.language": "en,pt,pt_BR",
+  "cSpell.words": [
+    "refatoramento"
+  ],
 }
