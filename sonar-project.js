@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/no-extraneous-dependencies */
 const scanner = require('sonarqube-scanner');
 const dotenv = require('dotenv');
 
@@ -16,6 +14,7 @@ scanner(
     options: {
       'sonar.sources': 'src',
       'sonar.sourceEncoding': 'UTF-8',
+      'sonar.organization': 'jpmoura-github'
     },
   },
   () => {
