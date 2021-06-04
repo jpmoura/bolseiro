@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/bolseiro/static/js/main.de7eb951.chunk.js",
-    "main.js.map": "/bolseiro/static/js/main.de7eb951.chunk.js.map",
+    "main.js": "/bolseiro/static/js/main.85aee585.chunk.js",
+    "main.js.map": "/bolseiro/static/js/main.85aee585.chunk.js.map",
     "runtime-main.js": "/bolseiro/static/js/runtime-main.b70d861a.js",
     "runtime-main.js.map": "/bolseiro/static/js/runtime-main.b70d861a.js.map",
     "static/js/2.e88f85cb.chunk.js": "/bolseiro/static/js/2.e88f85cb.chunk.js",
@@ -14,6 +14,6 @@
   "entrypoints": [
     "static/js/runtime-main.b70d861a.js",
     "static/js/2.e88f85cb.chunk.js",
-    "static/js/main.de7eb951.chunk.js"
+    "static/js/main.85aee585.chunk.js"
   ]
 }
