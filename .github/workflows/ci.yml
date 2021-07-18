@@ -20,20 +20,12 @@ on:
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ["14.x"]
     steps:
       - name: "Checkout repository on branch ${{ github.ref }}"
         uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path

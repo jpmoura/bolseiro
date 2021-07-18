@@ -64,7 +64,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "yarn build",
-    "deploy": "node gh-pages.js"
+    "deploy": "gh-pages -d build"
   },
   "husky": {
     "hooks": {
